@@ -1,0 +1,59 @@
+openapi: 3.0.3
+info:
+  title: Marktrollen-API
+  description: Eine API zur Abfrage von Marktrollen im deutschen Energiemarkt gemäß BDEW-Standard.
+  version: 1.0.0
+  contact:
+    name: BDEW KI-Lizenzteam
+    email: ki-lizenzteam@bdew.de
+
+servers:
+  - url: https://www.bdew-mako.de/api
+    description: Produktionsumgebung
+
+paths:
+  /marktrollen:
+    get:
+      summary: Liste aller Marktrollen abrufen
+      description: Gibt eine Liste aller verfügbaren Marktrollen im Strommarkt zurück.
+      responses:
+        '200':
+          description: Erfolgreiche Abfrage
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Marktrolle'
+
+  /marktrollen/{code}:
+    get:
+      summary: Details einer Marktrolle abrufen
+      parameters:
+        - name: code
+          in: path
+          required: true
+          description: Der eindeutige Code der Marktrolle (z. B. NB, LF, MSB)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Marktrolle gefunden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Marktrolle'
+        '404':
+          description: Marktrolle nicht gefunden
+
+components:
+  schemas:
+    Marktrolle:
+      type: object
+      properties:
+        code:
+          type: string
+          example: NB
+        bezeichnung:
+          type: string
+          example: Netzbetreiber
