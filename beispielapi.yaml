@@ -1,15 +1,12 @@
 openapi: 3.0.3
 info:
-  title: Marktrollen-API
-  description: Eine API zur Abfrage von Marktrollen im deutschen Energiemarkt gemäß BDEW-Standard.
+  title: TestTest
+  description: TestTest
   version: 1.0.0
-  contact:
-    name: BDEW KI-Lizenzteam
-    email: ki-lizenzteam@bdew.de
 
 servers:
   - url: https://www.bdew-mako.de/api
-    description: Produktionsumgebung
+    description: Test
 
 paths:
   /marktrollen:
