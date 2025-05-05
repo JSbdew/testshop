@@ -1,18 +1,18 @@
 openapi: 3.0.3
 info:
-  title: TestTest
-  description: TestTest
+  title: TestShop
+  description: Testshop-API
   version: 1.0.0
 
 servers:
-  - url: https://www.bdew-mako.de/api
-    description: Test
+  - url: https://api.testshop.local/v1
+    description: Testumgebung
 
 paths:
-  /marktrollen:
+  /produkte:
     get:
-      summary: Liste aller Marktrollen abrufen
-      description: Gibt eine Liste aller verfügbaren Marktrollen im Strommarkt zurück.
+      summary: Liste aller Produkte abrufen
+      description: Gibt eine Liste aller verfügbaren Produkte im Testshop zurück.
       responses:
         '200':
           description: Erfolgreiche Abfrage
@@ -21,36 +21,116 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Marktrolle'
+                  $ref: '#/components/schemas/Produkt'
 
-  /marktrollen/{code}:
+  /produkte/{id}:
     get:
-      summary: Details einer Marktrolle abrufen
+      summary: Details eines Produkts abrufen
       parameters:
-        - name: code
+        - name: id
           in: path
           required: true
-          description: Der eindeutige Code der Marktrolle (z. B. NB, LF, MSB)
+          description: Die eindeutige ID des Produkts
           schema:
-            type: string
+            type: integer
+            format: int64
       responses:
         '200':
-          description: Marktrolle gefunden
+          description: Produkt gefunden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Marktrolle'
+                $ref: '#/components/schemas/Produkt'
         '404':
-          description: Marktrolle nicht gefunden
+          description: Produkt nicht gefunden
+
+  /bestellungen:
+    post:
+      summary: Neue Bestellung erstellen
+      description: Legt eine neue Bestellung im Testshop an.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bestellung'
+      responses:
+        '201':
+          description: Bestellung erfolgreich erstellt
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BestellungResponse'
+
+  /bestellungen/{id}:
+    get:
+      summary: Details einer Bestellung abrufen
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Die eindeutige ID der Bestellung
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Bestellung gefunden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bestellung'
+        '404':
+          description: Bestellung nicht gefunden
 
 components:
   schemas:
-    Marktrolle:
+    Produkt:
       type: object
       properties:
-        code:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
           type: string
-          example: NB
-        bezeichnung:
+          example: Testprodukt
+        beschreibung:
           type: string
-          example: Netzbetreiber
+          example: Beschreibung des Testprodukts
+        preis:
+          type: number
+          format: float
+          example: 19.99
+        verfuegbar:
+          type: boolean
+          example: true
+
+    Bestellung:
+      type: object
+      properties:
+        kundenName:
+          type: string
+          example: Max Mustermann
+        adresse:
+          type: string
+          example: Musterstraße 1, 12345 Musterstadt
+        produktIds:
+          type: array
+          items:
+            type: integer
+          example:
+            - 1
+            - 2
+            - 3
+
+    BestellungResponse:
+      type: object
+      properties:
+        bestellId:
+          type: integer
+          format: int64
+          example: 1001
+        status:
+          type: string
+          example: bestätigt
